@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - Gowtham World School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+        }
+        header img {
+            width: 100px;
+            height: auto;
+            margin-right: 20px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            color: orange;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            border: 2px solid orange;
+            border-radius: 5px;
+        }
+        .content {
+            text-align: left;
+            margin-top: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .nav-button {
+            background-color: lightgray;
+            color: #333;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .nav-button:hover {
+            background-color: gray;
+            color: white;
+        }
+        h2 {
+            color: orange;
+            margin-bottom: 10px;
+        }
+        .logout-button {
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .logout-button:hover {
+            background-color: darkorange;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="images/school_logo.png" alt="Gowtham World School Logo">
+    <h1>Gowtham World School</h1>
+</header>
+
+<div class="container">
+    <iframe id="videoPlayer" width="100%" height="400" frameborder="0" allowfullscreen>
+        Your browser does not support the iframe tag.
+    </iframe>
+    <div class="content">
+        <h2>Teacher's Observations:</h2>
+        <p id="displayObservations">Loading...</p>
+        <h2>Teacher's Feedback:</h2>
+        <p id="displayFeedback">Loading...</p>
+    </div>
+    <button class="logout-button" onclick="logout()">Logout</button>
+</div>
+
+<script>
+    function fetchParentData() {
+        fetch('/parent-data')
+            .then(response => response.json())
+            .then(data => {
+                if (data.videoLink) {
+                    const videoId = new URL(data.videoLink).searchParams.get('v');
+                    document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${videoId}`;
+                }
+                document.getElementById('displayObservations').textContent = data.observations || 'No observations provided.';
+                document.getElementById('displayFeedback').textContent = data.feedback || 'No feedback provided.';
+            })
+            .catch(error => {
+                console.error('Error fetching parent data:', error);
+                document.getElementById('displayObservations').textContent = 'Error loading observations.';
+                document.getElementById('displayFeedback').textContent = 'Error loading feedback.';
+            });
+    }
+
+    function logout() {
+        window.location.href = 'index.html'; // Update with the correct login page URL
+    }
+
+    window.onload = fetchParentData;
+</script>
+
+</body>
+</html>
